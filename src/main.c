@@ -6,7 +6,6 @@
 #define SCREEN_HEIGHT 600
 
 #define MAX_VERTICES 100
-// #define PI 3.14159265358979323846
 #define RADIUS 250
 #define CENTRE (Vector2){SCREEN_WIDTH/2, SCREEN_HEIGHT/2}
 
@@ -66,11 +65,11 @@ int main(void) {
 	while(!WindowShouldClose()) {
 		float deltaTime = GetFrameTime();
 
+		// Update
 		if (IsKeyPressed(KEY_TWO)) {
 			showPoints = !showPoints;
 		}
 
-		// Update
 		if (IsKeyPressed(KEY_ONE) && num_vertices < MAX_VERTICES) {
 			num_vertices += 1;
 			FillCurrentVertices(num_vertices);

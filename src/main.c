@@ -7,28 +7,11 @@
 
 #define MAX_VERTICES 100
 // #define PI 3.14159265358979323846
-#define RADIUS 100
+#define RADIUS 250
 #define CENTRE (Vector2){SCREEN_WIDTH/2, SCREEN_HEIGHT/2}
-
-
-
-// Vertex currentVertices[4] = {
-//     { {400.0f, 400.0f}, {500.0f, 400.0f} },  // centre, position
-//     { {400.0f, 400.0f}, {350.0f, 486.6f} },
-//     { {400.0f, 400.0f}, {350.0f, 313.4f} },
-//     { {400.0f, 400.0f}, {350.0f, 313.4f} }
-// };
-
-// Vertex nextVertices[4] = {
-//     { {400.0f, 400.0f}, {500.0f, 400.0f} },  // centre, position
-//     { {400.0f, 400.0f}, {400.0f, 500.0f} },
-//     { {400.0f, 400.0f}, {300.0f, 400.0f} },
-//     { {400.0f, 400.0f}, {400.0f, 300.0f} }
-// };
 
 Vertex currentVertices[MAX_VERTICES];
 Vertex nextVertices[MAX_VERTICES];
-
 
 int main(void) {
 
@@ -50,6 +33,7 @@ int main(void) {
 	};
 
 	int num_vertices = 3; // initial value
+	bool showPoints = true;
 
 	void FillCurrentVertices(int num_vertices) {
 	// Fill current vertex array
@@ -81,6 +65,10 @@ int main(void) {
 	// Game loop
 	while(!WindowShouldClose()) {
 		float deltaTime = GetFrameTime();
+
+		if (IsKeyPressed(KEY_TWO)) {
+			showPoints = !showPoints;
+		}
 
 		// Update
 		if (IsKeyPressed(KEY_ONE) && num_vertices < MAX_VERTICES) {
@@ -115,15 +103,31 @@ int main(void) {
 		BeginDrawing();
 		ClearBackground(RAYWHITE);
 
-		DrawCircleV(CENTRE, 4, BLUE);
+		
 
+		// Draw vertices 
+		for (int i = 0; i < num_vertices + 1; i++) {  // Loop through all vertices including the duplicate
+		int next = (i + 1) % (num_vertices + 1);  // Wrap around
 
-		// draw vertices
-		for (int i = 0; i < num_vertices+1; i++ ) {
-			DrawCircleV(currentVertices[i].position, 4, RED);
-			// DrawCircleV(nextVertices[i].position, 4, BLUE);
+		Color customColor = { 255, 150, 0, 255 };
+    
+		DrawTriangle(
+			currentVertices[i].centre,        // center of circle
+			currentVertices[next].position,   // next vertex (for counter-clockwise winding)
+			currentVertices[i].position,      // current vertex
+			customColor
+		);
+
+		if (showPoints) {
+			DrawCircleV(currentVertices[i].position, 4, BLUE);
+			DrawCircleV(CENTRE, 4, BLUE);
 		}
 
+		
+}
+		// Draw UI text
+        DrawText(TextFormat("Vertices: %d (Use #1 key to increase)", (num_vertices+1)), 10, 10, 20, BLACK);
+		DrawText("Press #2 to hide points", 10, 30, 20, BLACK);
 		EndDrawing();
 	}
 
